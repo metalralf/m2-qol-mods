@@ -79,3 +79,20 @@ python3 pack_root.py --verify # ellenőrzés (CRC-k listázása)
 
 - Játékos: tedd vissza a mentett `root.epk`/`root.eix`-et.
 - Admin: `pack/root/` fájljait cseréld vissza az eredetiekre (vagy `patch/` diff-ek reverse alkalmazása), majd `python3 pack_root.py`.
+
+---
+
+## Referenciák és kapcsolódó dokumentáció
+
+**A pack formátum megfejtéséhez használt források:**
+- `git.old-metin2.com/metin2/client` — a 2014-es kliens forrása (EterPack, LZO/TEA, HybridCrypt)
+- `git.old-metin2.com/metin2/server` — a szerver forrása (shop DB-séma, gamefiles)
+- `github.com/NakiuS/Metin2Client` — klasszikus kliens-forrás (`EterPack.cpp`, `PythonBackground.cpp`, `CPythonSystem::SetShadowLevel` stb.)
+- `github.com/christian-roggia/metin2-global-tools` — EIX/EPK kinyerő (formátum-referencia)
+
+**Kapcsolódó doksik a projekt gyökerében (`~/Dokumentumok/madocsa2/`):**
+- `OPTIMALIZALAS.md` — teljes Linux/Wine beállítás: DXVK, GameMode, MangoHud mérés, `metin2.cfg` optimalizálás, P-mag pinning, a pack formátum bontása (10. szekció)
+- `Madocsa2/run-metin2.sh` — a wine+DXVK+GameMode indító script (nem mod, de a futtatáshoz kell)
+- `AGENTS.md` — a kódbázis elemzése (architektúra, gotchák)
+
+**Futás közbeni diagnosztika** (ha egy mod nem viselkedik): a kliens `syserr.txt`-je és `ErrorLog.txt`-je írja a Python tracebackeket; a név-mangling buktató (dupla aláhúzású attribútumok) a leggyakoribb hibaforrás a script-módosításoknál.
