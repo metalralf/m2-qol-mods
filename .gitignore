@@ -2,3 +2,4 @@ credentials
 serverinfo.py
 *.epk
 *.eix
+__pycache__/
