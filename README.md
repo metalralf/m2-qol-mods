@@ -7,11 +7,23 @@ Minden mod a `pack/root/` script réteget módosítja + a `root.epk` újracsomag
 
 ## Telepítés játékosoknak (nem kell semmihez érteni)
 
+A kész `root.epk`/`root.eix` párt **a szerverüzemeltetőtől kapod** (nem a repóból —
+az tartalmazza a szerver `serverinfo.py`-ját, az nem publikus). Telepítés:
+
 1. **Biztonsági mentés**: másold ki a meglévő `pack/root.epk` és `pack/root.eix` fájlokat (a kliens mappában, a `pack/` almappában).
-2. **Csere**: a repó `pack/root.epk` és `pack/root.eix` fájljait másold be a kliens `pack/` mappájába (a régiek helyére).
+2. **Csere**: a kapott `root.epk` és `root.eix` fájlokat másold be a kliens `pack/` mappájába (a régiek helyére).
 3. **Indítás**: indítsd a klienst a szokásos módon. Kész.
 
 > **Fontos**: a modok ehhez a kliens-buildhez készültek. Másik szerver/kliens esetén a `patch/` diff-eket kell használni (lásd lentebb).
+
+### Szerverüzemeltetőnek: a játékosok packet előállítani
+
+```bash
+# a repó pack/root/ fájljait másold a saját kliensed pack/root/ mappájába
+# (a SAJÁT serverinfo.py-dat NEM írod felül!)
+python3 pack_root.py      # a pack/ mappában: generálja a root.epk + root.eix-et
+```
+A kapott `root.epk`/`root.eix` terjeszthető a játékosoknak.
 
 ---
 

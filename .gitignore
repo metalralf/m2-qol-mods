@@ -1,1 +1,4 @@
 credentials
+serverinfo.py
+*.epk
+*.eix
