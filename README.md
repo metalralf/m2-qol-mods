@@ -102,9 +102,9 @@ python3 pack_root.py --verify # ellenőrzés (CRC-k listázása)
 - `github.com/NakiuS/Metin2Client` — klasszikus kliens-forrás (`EterPack.cpp`, `PythonBackground.cpp`, `CPythonSystem::SetShadowLevel` stb.)
 - `github.com/christian-roggia/metin2-global-tools` — EIX/EPK kinyerő (formátum-referencia)
 
-**Kapcsolódó doksik a projekt gyökerében (`~/Dokumentumok/madocsa2/`):**
+**Kapcsolódó doksik** (a kliens telepítési mappájában, nem részei ennek a repónak):
 - `OPTIMALIZALAS.md` — teljes Linux/Wine beállítás: DXVK, GameMode, MangoHud mérés, `metin2.cfg` optimalizálás, P-mag pinning, a pack formátum bontása (10. szekció)
-- `Madocsa2/run-metin2.sh` — a wine+DXVK+GameMode indító script (nem mod, de a futtatáshoz kell)
+- `run-metin2.sh` — wine+DXVK+GameMode indító script (nem mod, de a futtatáshoz kell)
 - `AGENTS.md` — a kódbázis elemzése (architektúra, gotchák)
 
 **Futás közbeni diagnosztika** (ha egy mod nem viselkedik): a kliens `syserr.txt`-je és `ErrorLog.txt`-je írja a Python tracebackeket; a név-mangling buktató (dupla aláhúzású attribútumok) a leggyakoribb hibaforrás a script-módosításoknál.
