@@ -1,0 +1,78 @@
+--- /tmp/orig_root/game.py	2026-08-12 10:06:37.255360115 +0200
++++ /home/kapitanyr/Dokumentumok/madocsa2/qol-mods/pack/root/game.py	2026-08-12 12:37:08.900696447 +0200
+@@ -418,6 +418,20 @@
+ 		onClickKeyDict[app.DIK_LCONTROL] = lambda: self.HideMouseImage()
+ 		onClickKeyDict[app.DIK_LSHIFT] = lambda: self.__SetQuickSlotMode()
+ 		onPressKeyDict[app.DIK_F6]= lambda : self.__toggleSwitchbot()
++		# QoL: F11 = FPS/debug overlay ki/be
++		onPressKeyDict[app.DIK_F11]= lambda : self.ToggleDebugInfo()
++		# QoL: F5 = nevek ki/be (tartós kapcsoló)
++		onPressKeyDict[app.DIK_F5]= lambda : self.__toggleAlwaysShowName()
++		# QoL: F7 = árnyék ki/be (FPS)
++		onPressKeyDict[app.DIK_F7]= lambda : self.__toggleShadow()
++		# QoL: F8 = chat ki/be
++		onPressKeyDict[app.DIK_F8]= lambda : self.__toggleChat()
++		# QoL: F9 = kamera tényleges távolsága
++		onPressKeyDict[app.DIK_F9]= lambda : self.__toggleCameraDistance()
++		# QoL: F10 = köd ciklus (FPS: több köd = kevesebb mob render)
++		onPressKeyDict[app.DIK_F10]= lambda : self.__toggleFog()
++		# QoL: F12 = quest gombok ki/be
++		onPressKeyDict[app.DIK_F12]= lambda : self.interface.ToggleQuestButtons()
+ 
+ 		#if constInfo.PVPMODE_ACCELKEY_ENABLE:
+ 		#	onClickKeyDict[app.DIK_B] = lambda: self.ChangePKMode()
+@@ -1151,6 +1165,54 @@
+ 		self.playerGauge.DisableShowAlways()
+ 		player.SetQuickPage(self.quickSlotPageIndex)
+ 
++	# QoL: F5 - nevek tartós ki/be
++	def __toggleAlwaysShowName(self):
++		self.ShowNameFlag = not self.ShowNameFlag
++		if self.ShowNameFlag:
++			self.playerGauge.EnableShowAlways()
++		else:
++			self.playerGauge.DisableShowAlways()
++
++	# QoL: F7 - árnyék ki/be (shadowOn: nem-mangolt név!)
++	def __toggleShadow(self):
++		if not hasattr(self, "shadowOn"):
++			self.shadowOn = True
++		if self.shadowOn:
++			background.SetShadowLevel(0)
++			self.shadowOn = False
++			chat.AppendChat(chat.CHAT_TYPE_INFO, "Shadow: OFF")
++		else:
++			background.SetShadowLevel(3)
++			self.shadowOn = True
++			chat.AppendChat(chat.CHAT_TYPE_INFO, "Shadow: ON")
++
++	# QoL: F8 - chat ki/be
++	def __toggleChat(self):
++		if self.interface and self.interface.wndChat:
++			if self.interface.wndChat.IsShow():
++				self.interface.wndChat.Hide()
++			else:
++				self.interface.wndChat.Show()
++
++	# QoL: F9 - kamera tényleges távolsága (közel/távol)
++	def __toggleCameraDistance(self):
++		global cameraDistance
++		if cameraDistance <= 1600.0:
++			cameraDistance = 2300.0
++			app.SetCamera(cameraDistance, cameraPitch, cameraRotation, cameraHeight)
++			chat.AppendChat(chat.CHAT_TYPE_INFO, "Camera: FAR")
++		else:
++			cameraDistance = 1550.0
++			app.SetCamera(cameraDistance, cameraPitch, cameraRotation, cameraHeight)
++			chat.AppendChat(chat.CHAT_TYPE_INFO, "Camera: NEAR")
++
++	# QoL: F10 - köd ciklus (0/1/2; FPS-hez a 2-es a legjobb)
++	def __toggleFog(self):
++		idx = constInfo.GET_FOG_LEVEL_INDEX()
++		idx = (idx + 1) % len(constInfo.FOG_LEVEL_LIST)
++		constInfo.SET_FOG_LEVEL_INDEX(idx)
++		chat.AppendChat(chat.CHAT_TYPE_INFO, "Fog: %d (%d)" % (idx, constInfo.FOG_LEVEL_LIST[idx]))
++
+ 	def ShowMouseImage(self):
+ 		self.interface.ShowMouseImage()
+ 

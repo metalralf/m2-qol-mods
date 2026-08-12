@@ -1,0 +1,23 @@
+--- /tmp/orig_root/uitooltip.py	2026-08-12 10:06:38.368174534 +0200
++++ /home/kapitanyr/Dokumentumok/madocsa2/qol-mods/pack/root/uitooltip.py	2026-08-12 12:37:08.902643173 +0200
+@@ -759,8 +759,10 @@
+ 			itemName+=item.GetItemName()
+ 		self.SetTitle(itemName)
+ 
+-	def __SetNormalItemTitle(self):
++	def __SetNormalItemTitle(self, itemVnum):
+ 		self.SetTitle(item.GetItemName())
++		# QoL: vnum mutatása az azonosításhoz
++		self.AppendTextLine("vnum: %d" % itemVnum, self.NORMAL_COLOR)
+ 
+ 	def __SetSpecialItemTitle(self):
+ 		self.AppendTextLine(item.GetItemName(), self.SPECIAL_TITLE_COLOR)
+@@ -778,7 +780,7 @@
+ 				self.__SetSpecialItemTitle()
+ 				return
+ 
+-			self.__SetNormalItemTitle()
++			self.__SetNormalItemTitle(itemVnum)
+ 
+ 	def __IsAttr(self, attrSlot):
+ 		if not attrSlot:

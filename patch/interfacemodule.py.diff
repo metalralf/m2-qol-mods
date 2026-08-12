@@ -1,0 +1,30 @@
+--- /tmp/orig_root/interfacemodule.py	2026-08-12 10:06:37.178235048 +0200
++++ /home/kapitanyr/Dokumentumok/madocsa2/qol-mods/pack/root/interfacemodule.py	2026-08-12 12:37:08.904243266 +0200
+@@ -1342,17 +1342,26 @@
+ 		yPos = 170 * screenHeight / 600
+ 		yCount = (screenHeight - 330) / 63
+ 
++		# QoL: quest buttons visibility default
++		if not hasattr(self, "questButtonsVisible"):
++			self.questButtonsVisible = True
++
+ 		count = 0
+ 		for btn in self.questButtonList:
+ 
+ 			btn.SetPosition(xPos + (int(count/yCount) * 100), yPos + (count%yCount * 63))
+ 			count += 1
+ 			global IsQBHide
+-			if IsQBHide:
++			if IsQBHide or not getattr(self, "questButtonsVisible", True):
+ 				btn.Hide()
+ 			else:
+ 				btn.Show()
+ 
++	# QoL: toggle quest buttons visibility (F12)
++	def ToggleQuestButtons(self):
++		self.questButtonsVisible = not getattr(self, "questButtonsVisible", True)
++		self.__ArrangeQuestButton()
++
+ 	def __StartQuest(self, btn):
+ 		event.QuestButtonClick(btn.index)
+ 		self.__DestroyQuestButton(btn)
