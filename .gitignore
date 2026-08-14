@@ -2,4 +2,7 @@ credentials
 serverinfo.py
 *.epk
 *.eix
+*.pyc
 __pycache__/
+dist/
+Madocsa2-QoL-*.zip

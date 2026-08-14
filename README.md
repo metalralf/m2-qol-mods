@@ -1,29 +1,52 @@
 # Madocsa2 kliens — QoL modok
 
-Kliensoldali (Python 2) minőségi javítások a Metin2 klienshez, saját repack eszközzel.
-Minden mod a `pack/root/` script réteget módosítja + a `root.epk` újracsomagolásával él.
+Kliensoldali (Python 2) minőségi javítások a Metin2 klienshez, saját repack
+eszközzel. A modok a `pack/root/` script réteget módosítják, és a `root.epk`
+újracsomagolásával élnek.
 
 ---
 
-## Telepítés játékosoknak (nem kell semmihez érteni)
+## Játékosoknak — letöltés és bemásolás (ez az egész)
 
-A kész `root.epk`/`root.eix` párt **a szerverüzemeltetőtől kapod** (nem a repóból —
-az tartalmazza a szerver `serverinfo.py`-ját, az nem publikus). Telepítés:
+> **Nem kell semmihez értened.** A kész csomagot a szerverüzemeltetőtől
+> kapod, nem ebből a repóból. A repo csak a modok forrása.
 
-1. **Biztonsági mentés**: másold ki a meglévő `pack/root.epk` és `pack/root.eix` fájlokat (a kliens mappában, a `pack/` almappában).
-2. **Csere**: a kapott `root.epk` és `root.eix` fájlokat másold be a kliens `pack/` mappájába (a régiek helyére).
-3. **Indítás**: indítsd a klienst a szokásos módon. Kész.
+A `Madocsa2-QoL-<verzió>.zip` telepítése 3 lépés (részletesen: `JATEKOSOK.md`,
+a zipben pedig `TELEPITES.txt`):
 
-> **Fontos**: a modok ehhez a kliens-buildhez készültek. Másik szerver/kliens esetén a `patch/` diff-eket kell használni (lásd lentebb).
+1. **Letöltés** — a zip, amit az admin oszt ki.
+2. **Bemásolás** — a zip tartalmát másold a játék mappájába (a `Madocsa2.exe` mellé).
+3. **Kattintás** — futtasd az `install_qol.bat`-ot: magától biztonsági mentést
+   készít és beállít mindent. Visszavonás: `uninstall_qol.bat`.
 
-### Szerverüzemeltetőnek: a játékosok packet előállítani
+Az aktív modok (lásd lentebb a táblázatot) a játékban **F5–F12** gombokkal
+kapcsolhatók.
+
+---
+
+## Szerverüzemeltetőnek — a játékosok zip előállítása (egyszer)
+
+A kész zip a kliens `serverinfo.py`-ját tartalmazza, ezért **nem lehet a
+repóban** — a saját gépeden kell előállítanod, és a játékosaidnak kiosztani
+(Discord/weblink). Egy parancs:
 
 ```bash
-# a repó pack/root/ fájljait másold a saját kliensed pack/root/ mappájába
-# (a SAJÁT serverinfo.py-dat NEM írod felül!)
-python3 pack_root.py      # a pack/ mappában: generálja a root.epk + root.eix-et
+# függőség: liblzo2 (a packer LZO1X tömörítést használ)
+sudo pacman -S lzo   # Arch/EndeavourOS
+# vagy: sudo apt install liblzo2-2  (Debian/Ubuntu)
+
+# a kliens mappádra mutatva (ahol a Madocsa2.exe van):
+python3 build_dist.py --client <a-kliens-mappaja>
 ```
-A kapott `root.epk`/`root.eix` terjeszthető a játékosoknak.
+
+A script a kliensed **teljes** `pack/root/`-jából dolgozik: ráírja a repó 4
+módosított fájlját, újracsomagolja a `root.epk`/`root.eix`-et, CRC-vel
+ellenőrzi, majd becsomagolja mindent a `dist/Madocsa2-QoL-<verzió>.zip`-be
+(a telepítő/eltávolító `.bat`-okkal és a `TELEPITES.txt`-tel együtt).
+
+> **Fontos**: a `--client` a **teljes kliens mappád** legyen (ahol a
+> `pack/root/` minden fájlja megvan) — a repo `pack/root/`-ja csak a 4
+> módosított fájlt tartalmazza, azzal önmagában nem lehet packot építeni.
 
 ---
 
@@ -43,7 +66,7 @@ A kapott `root.epk`/`root.eix` terjeszthető a játékosoknak.
 
 ---
 
-## Adminoknak: a modok fájljai és a repack
+## Adminoknak: a modok fájljai és a manuális repack
 
 ### Módosított fájlok (`pack/root/`)
 
@@ -56,18 +79,17 @@ A kapott `root.epk`/`root.eix` terjeszthető a játékosoknak.
 
 A pontos eltérések az eredeti fájlokhoz képest a `patch/*.diff` fájlokban vannak.
 
-### Repack (Linux, Python 3)
+### Manuális repack (Linux, Python 3)
 
-A packer a **`pack/root/` mappából** építi a `root.epk`-t és `root.eix`-et:
+A `build_dist.py` használata helyett kézzel is lehet packolni (pl. ha saját
+módosításaid is vannak a `pack/root/`-ban):
 
 ```bash
-# függőség: liblzo2 (a packer LZO1X tömörítést használ)
-sudo pacman -S lzo   # Arch/EndeavourOS
-# vagy: sudo apt install liblzo2-2  (Debian/Ubuntu)
-
-# szerkesztés után:
-python3 pack_root.py          # újragenerálja a pack/root.epk + root.eix fájlokat
-python3 pack_root.py --verify # ellenőrzés (CRC-k listázása)
+# a repó pack/root/ 4 fájlját másold a saját kliensed pack/root/ mappájába
+# (a SAJÁT serverinfo.py-dat NEM írod felül!)
+cd <a-kliens-mappaja>/pack
+python3 <repó>/pack_root.py      # generálja a root.epk + root.eix-et itt
+python3 <repó>/pack_root.py --verify  # ellenőrzés (CRC-k listázása)
 ```
 
 ### A pack formátum (ha valaki mélyebben akarja)
@@ -81,7 +103,7 @@ python3 pack_root.py --verify # ellenőrzés (CRC-k listázása)
 
 ## Biztonság / szabályok
 
-- **NE kerüljön a repóba**: a `credentials` fájl (fiókjelszavak) és a `serverinfo.py` élő IP/port adatai. (A játékosok a saját kliensük `serverinfo.py`-jét használják — azt NEM szabad felülírni a modokkal.)
+- **NE kerüljön a repóba**: a `credentials` fájl (fiókjelszavak), a `serverinfo.py` élő IP/port adatai, és a `dist/` kimenet (a zip tartalmazza a `serverinfo.py`-t a `root.epk`-ben). A játékosok a saját kliensük `serverinfo.py`-jét használják — azt NEM szabad felülírni a modokkal.
 - A `root.epk` tartalma ehhez a szerverhez/klienshez kötött; más buildnél a `patch/` diff-eket kell újraalkalmazni.
 - A Metin2 kliens a Ymir/Gameforge szellemi tulajdona — a modok csak script-szintű személyre szabások, a terjesztés a saját szervered játékosai körében történjen.
 
@@ -89,22 +111,25 @@ python3 pack_root.py --verify # ellenőrzés (CRC-k listázása)
 
 ## Visszaállítás
 
-- Játékos: tedd vissza a mentett `root.epk`/`root.eix`-et.
+- Játékos: futtasd az `uninstall_qol.bat`-ot (vagy kézzel: tedd vissza a mentett `root.epk`/`root.eix`-et a `pack/` mappába).
 - Admin: `pack/root/` fájljait cseréld vissza az eredetiekre (vagy `patch/` diff-ek reverse alkalmazása), majd `python3 pack_root.py`.
 
 ---
 
-## Referenciák és kapcsolódó dokumentáció
+## Kapcsolódó dokumentáció
+
+- `JATEKOSOK.md` — a játékosoknak szóló útmutató (a zip nélkül is olvasható).
+- `LINUX_TELEPITES.md` — teljes Linux/Wine beállítás: DXVK, GameMode, MangoHud mérés, `metin2.cfg` optimalizálás, P-mag pinning, a pack formátum bontása (10. szekció).
+- `run-metin2.sh` — wine+DXVK+GameMode indító script (nem mod, de a futtatáshoz kell).
+- `AGENTS.md` — a kódbázis elemzése (architektúra, gotchák).
+
+**Futás közbeni diagnosztika** (ha egy mod nem viselkedik): a kliens
+`syserr.txt`-je és `ErrorLog.txt`-je írja a Python tracebackeket; a
+név-mangling buktató (dupla aláhúzású attribútumok) a leggyakoribb hibaforrás
+a script-módosításoknál.
 
 **A pack formátum megfejtéséhez használt források:**
 - `git.old-metin2.com/metin2/client` — a 2014-es kliens forrása (EterPack, LZO/TEA, HybridCrypt)
 - `git.old-metin2.com/metin2/server` — a szerver forrása (shop DB-séma, gamefiles)
 - `github.com/NakiuS/Metin2Client` — klasszikus kliens-forrás (`EterPack.cpp`, `PythonBackground.cpp`, `CPythonSystem::SetShadowLevel` stb.)
 - `github.com/christian-roggia/metin2-global-tools` — EIX/EPK kinyerő (formátum-referencia)
-
-**Kapcsolódó doksik** (a kliens telepítési mappájában, nem részei ennek a repónak):
-- `OPTIMALIZALAS.md` — teljes Linux/Wine beállítás: DXVK, GameMode, MangoHud mérés, `metin2.cfg` optimalizálás, P-mag pinning, a pack formátum bontása (10. szekció)
-- `run-metin2.sh` — wine+DXVK+GameMode indító script (nem mod, de a futtatáshoz kell)
-- `AGENTS.md` — a kódbázis elemzése (architektúra, gotchák)
-
-**Futás közbeni diagnosztika** (ha egy mod nem viselkedik): a kliens `syserr.txt`-je és `ErrorLog.txt`-je írja a Python tracebackeket; a név-mangling buktató (dupla aláhúzású attribútumok) a leggyakoribb hibaforrás a script-módosításoknál.

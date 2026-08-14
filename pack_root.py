@@ -125,6 +125,25 @@ def build_pack(files, root_dir, key):
     stored, src_size = make_container(index, KEY_EIX)
     return epk, stored[:src_size]
 
+def get_order(eix_path, root_dir):
+    """Fájl-sorrend: a meglevő eix-ből (ha olvasható), különben abc + új fájlok."""
+    order = []
+    if os.path.exists(eix_path):
+        try:
+            raw = open(eix_path, 'rb').read()
+            four, enc, comp, real = struct.unpack('<4sIII', raw[:16])
+            dec = tea_decrypt(raw[16:16+enc], KEY_EIX)
+            index = lzo_decompress(dec[4:4+comp], real)
+            count = struct.unpack('<4sII', index[:12])[2]
+            order = [index[12+i*192+4:12+i*192+4+NAME].split(b'\0')[0].decode('ascii', 'replace') for i in range(count)]
+        except Exception as ex:
+            print("figyelem: eredeti eix olvasas sikertelen (%s), abc sorrend" % ex)
+    disk = sorted(os.listdir(root_dir))
+    for n in disk:
+        if os.path.isfile(os.path.join(root_dir, n)) and n not in order:
+            order.append(n)
+    return order
+
 def verify(files, root_dir, epk_path, key):
     idx_raw = open(epk_path.replace('.epk', '.eix'), 'rb').read()
     four, enc, comp, real = struct.unpack('<4sIII', idx_raw[:16])
@@ -152,22 +171,8 @@ def main():
     out = args.outdir
 
     # sorrend az eredeti eix-ből (ha van), különben abc
-    order = []
     eix_path = os.path.join(out, 'root.eix')
-    if os.path.exists(eix_path):
-        raw = open(eix_path, 'rb').read()
-        try:
-            four, enc, comp, real = struct.unpack('<4sIII', raw[:16])
-            dec = tea_decrypt(raw[16:16+enc], KEY_EIX)
-            index = lzo_decompress(dec[4:4+comp], real)
-            count = struct.unpack('<4sII', index[:12])[2]
-            order = [index[12+i*192+4:12+i*192+4+NAME].split(b'\0')[0].decode('ascii', 'replace') for i in range(count)]
-        except Exception as ex:
-            print("figyelem: eredeti eix olvasas sikertelen (%s), abc sorrend" % ex)
-    disk = sorted(os.listdir(root_dir))
-    for n in disk:
-        if os.path.isfile(os.path.join(root_dir, n)) and n not in order:
-            order.append(n)
+    order = get_order(eix_path, root_dir)
 
     if args.verify:
         verify(order, root_dir, os.path.join(out, 'root.epk'), KEY_EPK)

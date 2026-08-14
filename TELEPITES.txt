@@ -1,0 +1,46 @@
+MADOCSA2 QOL MODOK - TELEPITESI UTASITAS
+========================================
+
+NEM KELL HOZZA SEM MIT ERTENI, SEM PROGRAMOZNI.
+Csak masolj es kattints, ennyi az egesz.
+
+-----------------------------------------
+1. LEPES: TOLTSD LE a zip fajlt.
+   (Azt a fajlt, amiben ezt a szoveget is kaptad.)
+
+2. LEPES: CSOMAGOLD KI a zipet, es a TARTALMAT (5 fajl) masold be
+   a jatek mappajaba - oda, ahol a Madocsa2.exe van.
+   Ha a Windows kerdezi, hogy felulirja-e, engedj mindent.
+
+3. LEPES: KATTINTS DUPLAN az install_qol.bat fajlra.
+   - A program magatol biztositasi mentest keszit az eredeti fajlokrol,
+     majd bemasolja a modokat.
+   - Ha minden jol ment, ezt irja: "KESZ! A QoL modok aktivak."
+
+4. LEPES: INDITSD a jatekot a szokasos modon. KESZ.
+
+-----------------------------------------
+A MODOK (a jatekban):
+  F5   karakter-nevek ki/be
+  F7   arnyek ki/be (tobb FPS sok mobnal)
+  F8   chat ablak ki/be
+  F9   kamera tavolsag (kozel / tavol)
+  F10  kod ciklus (tobb kod = kevesebb mob = tobb FPS)
+  F11  FPS kijelzes ki/be
+  F12  quest gombok ki/be
+  Ezen kivul: az item tooltipben latszik a vnum, a minimapon a koordinata.
+
+-----------------------------------------
+VISSZAVONAS (ha valami nem tetszik):
+  Kattints duplan az uninstall_qol.bat-ra.
+  Minden visszaall az eredeti allapotba, a modok eltunnek.
+
+-----------------------------------------
+BAJ VAN?
+  - "HIBA: Madocsa2.exe nem talalhato" -> rossz helyre masoltad;
+    a Madocsa2.exe MELLE kell tenni a fajlokat.
+  - "HIBA: a jatek most fut" -> zard be a jatekot teljesen, majd ujra.
+  - A jatek nem indul a modokkal -> futtasd az uninstall_qol.bat-ot,
+    minden helyreall.
+  - Barmi mas -> irj a szerver adminjainak, kuldd el nekik ezt a kepet,
+    amit a fekete ablak mutat (ha egyaltalan van).
